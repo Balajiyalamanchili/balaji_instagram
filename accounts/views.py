@@ -5,8 +5,6 @@ from .forms import RegisterForm, ProfileForm
 from .models import Profile
 from django.contrib.auth.models import User
 
-# Create your views here.
-
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -25,11 +23,10 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('profile')  # ⬅️ After login, go to profile
+            return redirect('profile')
         else:
             return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
     return render(request, 'accounts/login.html')
-
 
 def logout_view(request):
     logout(request)
@@ -37,7 +34,7 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def profile_view(request):
-    profile = request.user.profile
+    profile, _ = Profile.objects.get_or_create(user=request.user)
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -49,14 +46,12 @@ def profile_view(request):
 @login_required(login_url='login')
 def view_user_profile(request, username):
     user_obj = get_object_or_404(User, username=username)
-    profile = user_obj.profile
+    profile, _ = Profile.objects.get_or_create(user=user_obj)
     return render(request, 'accounts/user_profile.html', {'profile': profile})
 
-
-
-@login_required
+@login_required(login_url='login')
 def edit_profile(request):
-    profile = request.user.profile
+    profile, _ = Profile.objects.get_or_create(user=request.user)
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():

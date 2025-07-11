@@ -43,6 +43,7 @@ def profile_view(request):
         form = ProfileForm(instance=profile)
     return render(request, 'accounts/profile.html', {'form': form, 'profile': profile})
 
+
 @login_required(login_url='login')
 def view_user_profile(request, username):
     user_obj = get_object_or_404(User, username=username)

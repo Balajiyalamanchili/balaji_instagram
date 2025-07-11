@@ -1,24 +1,29 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Your Profile</title>
-  <link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
 
 </head>
+
 <body>
     <!-- <h2>Welcome, {{ request.user.username }}</h2> -->
-    
+
     {% if profile.profile_pic %}
-        <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" width="150">
+    <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" width="150">
     {% else %}
-        <p>No profile picture.</p>
+    <p>No profile picture.</p>
     {% endif %}
 
     <p>Bio: {{ profile.bio }}</p>
 
+    <a href="{% url 'edit_profile' %}">Edit Profile</a>
+
     <a href="{% url 'logout' %}">Logout</a>
 </body>
+
 </html>
 
 
